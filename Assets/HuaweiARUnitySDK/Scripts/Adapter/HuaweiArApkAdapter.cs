@@ -9,11 +9,11 @@
         public ARAvailability CheckAvailability()
         {
             int availability = 0;
-            NDKAPI.HwArApk_checkAvailability(ARUnityHelper.Instance.GetJEnv(),
+            NDKAPI.HwArEnginesApk_checkAvailability(ARUnityHelper.Instance.GetJEnv(),
                 ARUnityHelper.Instance.GetActivityHandle(), ref availability);
             return (ARAvailability)availability;
         }
-
+       
         public ARInstallStatus RequestInstall(bool userRequestedInstall)
         {
             int installState = 0;
@@ -32,11 +32,12 @@
         private struct NDKAPI
         {
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
-            public static extern void HwArApk_checkAvailability(IntPtr env,
+            public static extern void HwArEnginesApk_checkAvailability(IntPtr env,
                                 IntPtr application_context,
                                 ref int out_availability);
+            [Obsolete]
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
-            public static extern NDKARStatus HwArApk_requestInstall(IntPtr env,
+            public static extern NDKARStatus HwArEnginesApk_requestInstall(IntPtr env,
                                                 IntPtr application_activity,
                                                 bool user_requested_install,
                                                 ref int out_install_status);

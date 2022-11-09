@@ -29,7 +29,7 @@
         {
             NDKAPI.HwArConfig_setArType(m_ndkSession.SessionHandle, configHandle, (int)arConfig.GetARType());
             NDKAPI.HwArConfig_setCameraLensFacing(m_ndkSession.SessionHandle, configHandle, (int)arConfig.GetCameraLensFacing());
-            NDKAPI.HwArConfig_setLightEstimationMode(m_ndkSession.SessionHandle, configHandle, (int)arConfig.GetLightingMode());
+            NDKAPI.HwArConfig_setLightingMode(m_ndkSession.SessionHandle, configHandle, (int)arConfig.GetLightingMode());
             NDKAPI.HwArConfig_setPlaneFindingMode(m_ndkSession.SessionHandle, configHandle, (int)arConfig.GetPlaneFindingMode());
             NDKAPI.HwArConfig_setUpdateMode(m_ndkSession.SessionHandle, configHandle, (int)arConfig.GetUpdateMode());
             NDKAPI.HwArConfig_setImageInputMode(m_ndkSession.SessionHandle, configHandle, (int)arConfig.GetImageInputMode());
@@ -65,7 +65,7 @@
             arconfig.SetCameraLensFacing((ARConfigCameraLensFacing)ret);
 
             ARDebug.LogInfo("UpdateUnityConfigWithNDKConfig GetARType size {0}", arconfig.GetARType());
-            NDKAPI.HwArConfig_getLightEstimationMode(m_ndkSession.SessionHandle,configHandle,ref ret);
+            NDKAPI.HwArConfig_getLightingMode(m_ndkSession.SessionHandle,configHandle,ref ret);
             arconfig.SetLightingMode((ARConfigLightingMode)ret);
 
             NDKAPI.HwArConfig_getPlaneFindingMode(m_ndkSession.SessionHandle,configHandle,ref ret);
@@ -133,10 +133,10 @@
 
 
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
-            public static extern void HwArConfig_getLightEstimationMode(IntPtr sessionHandle,
+            public static extern void HwArConfig_getLightingMode(IntPtr sessionHandle,
                                        IntPtr configHandle, ref int lightEstimationMode);
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
-            public static extern void HwArConfig_setLightEstimationMode(IntPtr sessionHandle,
+            public static extern void HwArConfig_setLightingMode(IntPtr sessionHandle,
                                        IntPtr configHande, int lightEstimationMode);
 
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
