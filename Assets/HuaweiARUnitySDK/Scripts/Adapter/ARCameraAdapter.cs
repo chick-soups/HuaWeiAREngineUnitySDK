@@ -54,6 +54,16 @@
             NDKAPI.HwArCamera_release(cameraHandle);
         }
 
+        public ARCameraIntrinsics GetImageIntrinsics(IntPtr cameraHandle)
+        {
+            ARCameraIntrinsicsAdapter adapter = new ARCameraIntrinsicsAdapter(m_ndkSession);
+            IntPtr intrinsicsHandle = adapter.Create();
+            NDKAPI.HwArCamera_getImageIntrinsics(m_ndkSession.SessionHandle, cameraHandle, intrinsicsHandle);
+            ARCameraIntrinsics aRCameraIntrinsics = new ARCameraIntrinsics(intrinsicsHandle, adapter);
+            return aRCameraIntrinsics;
+
+        }
+
         private struct NDKAPI
         {
             //this function is useless in unity 
@@ -76,6 +86,8 @@
                                     float near, float far, ref Matrix4x4 outColMajor_4x4);
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
             public static extern void HwArCamera_release(IntPtr cameraHandle);
+            [DllImport(AdapterConstants.HuaweiARNativeApi)]
+            public static extern void HwArCamera_getImageIntrinsics(IntPtr sessionHandle, IntPtr cameraHandle, IntPtr outIntrinsics);
 
         }
     }
