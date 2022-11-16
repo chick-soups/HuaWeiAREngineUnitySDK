@@ -319,7 +319,7 @@
          * @return 碰撞结果列表，与输入点一一对应，每个点的碰撞结果都是一个ARPoint。
          * \endif
          */
-        public static List<ARHitResult> HitTestArea(float [] input2DPoints)
+        public static List<ARHitResult> HitTestArea(float[] input2DPoints)
         {
             if (ARSessionManager.Instance.SessionStatus != ARSessionStatus.RUNNING &&
                 ARSessionManager.Instance.SessionStatus != ARSessionStatus.PAUSED)
@@ -469,7 +469,7 @@
             }
             return ARSessionManager.Instance.m_ndkSession.FrameAdapter.GetAlignState();
         }
-		
+
         ///@endcond
 
         ///@cond ContainSecneMesh
@@ -495,7 +495,7 @@
             ARSceneMesh arSceneMesh = new ARSceneMesh(sceneMeshHandle, ARSessionManager.Instance.m_ndkSession);
             return arSceneMesh;
         }
-       ///@endcond
+        ///@endcond
         /**
          * \if english 
          * @deprecated use \link GetPose()\endlink instead.
@@ -591,6 +591,17 @@
         public static ARPointCloud GetPointCloud()
         {
             return AcquirePointCloud();
+        }
+
+        public static ARCamera GetCamera()
+        {
+            if (ARSessionManager.Instance.SessionStatus != ARSessionStatus.RUNNING &&
+              ARSessionManager.Instance.SessionStatus != ARSessionStatus.PAUSED)
+            {
+                throw new ARNotYetAvailableException();
+            }
+            IntPtr cameraPtr = ARSessionManager.Instance.m_ndkSession.FrameAdapter.AcquireCameraHandle();
+            return new ARCamera(cameraPtr, ARSessionManager.Instance.m_ndkSession.CameraAdapter);
         }
     }
 }
