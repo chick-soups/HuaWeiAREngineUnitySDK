@@ -50,12 +50,14 @@ namespace HuaweiARUnitySDK
         {
             if (!m_Disposed)
             {
+              
+                m_Adapter.Release(m_Handle);
+                m_Handle = IntPtr.Zero;
                 if (disposing)
                 {
                     m_Adapter = null;
                 }
-                m_Adapter.Release(m_Handle);
-                m_Handle = IntPtr.Zero;
+                m_Disposed=true;
             }
 
         }
