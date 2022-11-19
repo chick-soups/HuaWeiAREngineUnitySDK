@@ -66,7 +66,12 @@
                 transformedUVCoords[2], transformedUVCoords[3]));
             BackGroundMaterial.SetVector(rightTopBottom, new Vector4(transformedUVCoords[4], transformedUVCoords[5],
                 transformedUVCoords[6], transformedUVCoords[7]));
-            Pose p = ARFrame.GetPose();
+            Pose p = Pose.identity;
+            using (ARCamera arCamera = ARFrame.GetCamera())
+            {
+                p = arCamera.GetPose();
+            }
+
             m_camera.transform.position = p.position;
             m_camera.transform.rotation = p.rotation;
             m_camera.projectionMatrix = ARSession.GetProjectionMatrix(m_camera.nearClipPlane, m_camera.farClipPlane);

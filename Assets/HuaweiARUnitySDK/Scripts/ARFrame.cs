@@ -93,6 +93,7 @@
          * @return 设备的位姿。
          * \endif
          */
+         [Obsolete]
         public static Pose GetPose()
         {
             if (ARSessionManager.Instance.SessionStatus != ARSessionStatus.RUNNING &&
@@ -181,6 +182,7 @@
          * @return 当前帧的跟踪状态。
          * \endif
          */
+         [Obsolete]
         public static ARTrackable.TrackingState GetTrackingState()
         {
             if (ARSessionManager.Instance.SessionStatus != ARSessionStatus.RUNNING &&
@@ -205,6 +207,7 @@
          * @return 锚点的集合。
          * \endif
          */
+         [Obsolete]
         public static List<ARAnchor> GetAnchors(ARTrackableQueryFilter filter)
         {
             if (ARSessionManager.Instance.SessionStatus != ARSessionStatus.RUNNING &&
@@ -240,6 +243,7 @@
          * @param filter 查询过滤器。
          * \endif
          */
+         [Obsolete]
         public static void GetTrackables<T>(List<T> trackableList, ARTrackableQueryFilter filter) where T : ARTrackable
         {
             if (trackableList == null)
@@ -345,6 +349,7 @@
          * \link GetTransformDisplayUvCoords()\endlink重新获取贴图坐标。
          * \endif
          */
+         [Obsolete]
         public static bool IsDisplayGeometryChanged()
         {
             if (ARSessionManager.Instance.SessionStatus != ARSessionStatus.RUNNING &&
@@ -425,6 +430,11 @@
             return new ARCameraImageBytes(imagePtr, ARSessionManager.Instance.m_ndkSession);
         }
 
+        //TODO:实现方法AcquirePreviewImage
+        public static  ARCameraImageBytes AcquirePreviewImage(){
+            throw new NotImplementedException();
+        }
+
         ///@cond ContainShareAR
         /**
          * \if english
@@ -437,6 +447,7 @@
          * 请参考\link 共享地图\endlink。
          * \endif
          */
+        [Obsolete]
         public static ARWorldMappingState GetWorldMappingStatus()
         {
             if (ARSessionManager.Instance.SessionStatus != ARSessionStatus.RUNNING &&
@@ -460,6 +471,7 @@
          * 请参考\link 共享地图\endlink 功能。
          * \endif
          */
+        [Obsolete]
         public static ARAlignState GetAlignState()
         {
             if (ARSessionManager.Instance.SessionStatus != ARSessionStatus.RUNNING &&
@@ -545,6 +557,11 @@
         public static List<ARAnchor> GetUpdatedAnchors()
         {
             return GetAnchors(ARTrackableQueryFilter.UPDATED);
+        }
+        //TODO:实现GetUpdatedTrackables<T>()
+        public static List<T> GetUpdatedTrackables<T>() where T:ARTrackable
+        {
+            throw new NotImplementedException();
         }
 
         /**
