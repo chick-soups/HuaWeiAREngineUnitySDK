@@ -255,6 +255,7 @@
         }
         ///@cond EXCLUDE_DOXYGEN
         ///@deprecated use another function instead.
+        [Obsolete]
         public void GetPlanePolygon(ref List<Vector2> polygonList)
         {
             GetPlanePolygon(polygonList);
@@ -341,7 +342,11 @@
              * 天花板。
              * \endif
              */
-            PLANE_CEILING = 5
+            PLANE_CEILING = 5,
+           PLANE_DOOR,
+           PLANE_WINDOW,
+           PLANE_BED
+            
         }
 
         /**
