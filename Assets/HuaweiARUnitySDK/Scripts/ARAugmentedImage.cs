@@ -37,6 +37,17 @@ namespace HuaweiARUnitySDK
             return m_ndkSession.AugmentedImageAdapter.GetCenterPose(m_trackableHandle);
         }
 
+        public string GetCloudImageId()
+        {
+            return m_ndkSession.AugmentedImageAdapter.GetCloudImageId(m_trackableHandle);
+        }
+
+        public string GetCloudImageMetadata()
+        {
+            return m_ndkSession.AugmentedImageAdapter.GetCloudImageMetadata(m_trackableHandle);
+        }
+
+
         public float GetExtentX()
         {
             return m_ndkSession.AugmentedImageAdapter.GetExtentX(m_trackableHandle);

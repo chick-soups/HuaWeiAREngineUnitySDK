@@ -37,27 +37,7 @@
          */
         public ARConfigPowerMode PowerMode = ARConfigPowerMode.NORMAL;
 
-        /**\if english
-         * Item of depth switch of an configuration object. Default value is \c true。
-         * \else
-         * 配置项的深度开关。默认打开深度流。
-         * \endif
-         */
-        public bool EnableDepth = true;
-        /**\if english
-         * Item of mask switch an configuration object. Default value is \c false.
-         * \else
-         * 配置项的遮罩开关。默认关闭遮罩功能。
-         * \endif
-         */
-        public bool EnableMask = false;
-		/**\if english
-         * Item of scenemesh switch an configuration object. Default value is \c false.
-         * \else
-         * 配置项的环境Mesh开关。默认关闭环境Mesh。
-         * \endif
-         */
-        public bool EnableMesh = false;
+         public ARConfigEnableItem m_EnableItem=ARConfigEnableItem.ENABLE_DEPTH;
 
         /**\if english
          * Enable semantic plane mode. Default value is \c false.
@@ -65,7 +45,7 @@
          * 配置使能语义识别平面模式。默认关闭。
          * \endif
          */
-        public bool SemanticPlaneMode = false;
+        public ARConfigSemanticMode m_SemanticMode=ARConfigSemanticMode.NONE;
 
         /**\if english
          * The way the configuration item is opened by the camera. The camera is turned on internally by default.
@@ -79,7 +59,6 @@
         internal abstract int GetARType();
         internal virtual ARConfigPlaneFindingMode GetPlaneFindingMode() { return ARConfigPlaneFindingMode.DISABLE; }
         internal virtual ARConfigCameraLensFacing GetCameraLensFacing() { return ARConfigCameraLensFacing.REAR; }
-        internal virtual ARConfigLightingMode GetLightingMode() { return LightingMode; }
         internal virtual ARConfigUpdateMode GetUpdateMode() { return UpdateMode; }
         internal virtual ARConfigPowerMode GetPowerMode() { return PowerMode; }
         internal abstract ARConfigFocusMode GetFocusMode();
@@ -88,7 +67,6 @@
         internal virtual ARConfigHandFindingMode GetHandFindingMode() { return ARConfigHandFindingMode.DISABLED; }
         internal virtual void SetPlaneFindingMode(ARConfigPlaneFindingMode mode) { ; }
         internal virtual void SetCameraLensFacing(ARConfigCameraLensFacing lensFacing) { ; }
-        internal virtual void SetLightingMode(ARConfigLightingMode lightingMode) { LightingMode=lightingMode; }
         internal virtual void SetUpdateMode(ARConfigUpdateMode updateMode) { UpdateMode = updateMode; }
         internal virtual void SetPowerMode(ARConfigPowerMode powerMode) { PowerMode = powerMode; }
         internal virtual void SetImageInputMode(int imageInputMode) { ImageInputMode = imageInputMode; }
@@ -100,23 +78,58 @@
         internal const int EnableItem_Depth = 1 << 0;
         internal const int EnableItem_Mask = 1 << 1;
         internal const int EnableItem_Mesh = 1 << 2;
+        internal const int ENABLE_CLOUD_ANCHOR = 1 << 4;
+        internal const int ENABLE_CLOUD_AUGMENTED_IMAGE = 1 << 5;
+        internal const int ENABLE_HEALTH_DEVICE = 1 << 6;
+        internal const int ENABLE_FLASH_MODE_TORCH = 1 << 7;
+        internal const int ENABLE_CLOUD_OBJECT_RECOGNITION = 1 << 10;
         internal virtual ulong GetConfigEnableItem()
         {
-            ulong ret = EnableItem_None;
-            ret = EnableDepth ? ret | EnableItem_Depth : ret;
-            ret = EnableMask ? ret | EnableItem_Mask : ret;
-            ret = EnableMesh ? ret | EnableItem_Mesh : ret;
-            return ret;
+            return (ulong)m_EnableItem;
         }
 
         internal const int EnableSemanticModeNone = 0;
         internal const int EnableSemanticPlaneMode = 1 << 0;
-
+        internal const int SEMANTIC_TARGET=1<<1;
         internal virtual int GetConfigSemanticMode()
         {
-            int ret = EnableSemanticModeNone;
-            ret = SemanticPlaneMode ? ret | EnableSemanticPlaneMode : ret;
-            return ret;
+            return (int)m_SemanticMode;
+        }
+
+        internal const int LIGHT_MODE_NONE = 0;
+        internal const int LIGHT_MODE_AMBIENT_INTENSITY = 0x0001;
+        internal const int LIGHT_MODE_ENVIRONMENT_LIGHTING = 0x0002;
+        internal const int LIGHT_MODE_ENVIRONMENT_TEXTURE = 0x0004;
+        internal const int LIGHT_MODE_ALL = 0xFFFF;
+
+
+        internal virtual int GetLightingMode()
+        {
+            if (LightingMode.HasFlag(ARConfigLightingMode.AMBIENT_INTENSITY)
+            && LightingMode.HasFlag(ARConfigLightingMode.ENVIRONMENT_LIGHTING)
+            && LightingMode.HasFlag(ARConfigLightingMode.ENVIRONMENT_TEXTURE))
+            {
+                return LIGHT_MODE_ALL;
+            }
+            else
+            {
+                return (int)LightingMode;
+            }
+
+        }
+        internal virtual void SetLightingMode(int lightingMode)
+        {
+            if (lightingMode == LIGHT_MODE_ALL)
+            {
+                LightingMode = ARConfigLightingMode.AMBIENT_INTENSITY
+                | ARConfigLightingMode.ENVIRONMENT_LIGHTING
+                | ARConfigLightingMode.ENVIRONMENT_TEXTURE;
+            }
+            else
+            {
+                LightingMode = (ARConfigLightingMode)lightingMode;
+            }
+
         }
     }
 }

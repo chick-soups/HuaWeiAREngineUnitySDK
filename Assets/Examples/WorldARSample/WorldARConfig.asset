@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -14,10 +15,14 @@ MonoBehaviour:
   LightingMode: 1
   UpdateMode: 0
   PowerMode: 0
+  m_EnableItem: 1
   EnableDepth: 1
   EnableMask: 0
   EnableMesh: 0
+  m_SemanticMode: 1
   SemanticPlaneMode: 1
+  SemanticTargetMode: 0
+  ImageInputMode: 0
   FocusMode: 0
   PlaneFindingMode: 3
   AugmentedImageDatabase: {fileID: 0}
