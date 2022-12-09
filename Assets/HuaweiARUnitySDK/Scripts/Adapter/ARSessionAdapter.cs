@@ -9,6 +9,7 @@ namespace HuaweiARInternal
     internal class ARSessionAdapter
     {
         private NDKSession m_ndkSession;
+        private GCHandle m_CallbackHandle;
 
         public ARSessionAdapter(NDKSession session)
         {
@@ -17,21 +18,25 @@ namespace HuaweiARInternal
 
         public IntPtr Create()
         {
-            IntPtr sessionHandle= IntPtr.Zero;
+            IntPtr sessionHandle = IntPtr.Zero;
             ARDebug.LogInfo("native create seesion begin");
 
             IntPtr jEnv = ARUnityHelper.Instance.GetJEnv();
             IntPtr activity = ARUnityHelper.Instance.GetActivityHandle();
-            NDKARStatus status= NDKAPI.HwArSession_create(jEnv,activity, ref sessionHandle);
-            ARDebug.LogInfo("native create seesion returns status {0}",status);
+            NDKARStatus status = NDKAPI.HwArSession_create(jEnv, activity, ref sessionHandle);
+            ARDebug.LogInfo("native create seesion returns status {0}", status);
             ARExceptionAdapter.ExtractException(status);
             return sessionHandle;
         }
 
         public void Destroy()
         {
+            if (m_CallbackHandle != null)
+            {
+                m_CallbackHandle.Free();
+            }
             IntPtr sessionHandle = m_ndkSession.SessionHandle;
-            ARDebug.LogInfo("native destroy session begin, handle =0x{0}",sessionHandle.ToString("x8"));
+            ARDebug.LogInfo("native destroy session begin, handle =0x{0}", sessionHandle.ToString("x8"));
             NDKAPI.HwArSession_destroy(sessionHandle);
             ARDebug.LogInfo("native destroy session end");
         }
@@ -63,7 +68,7 @@ namespace HuaweiARInternal
         public void Pause()
         {
             NDKARStatus status = NDKAPI.HwArSession_pause(m_ndkSession.SessionHandle);
-            ARDebug.LogInfo("native pause end with value:{0}",status);
+            ARDebug.LogInfo("native pause end with value:{0}", status);
             ARExceptionAdapter.ExtractException(status);
 
         }
@@ -135,9 +140,9 @@ namespace HuaweiARInternal
         {
             IntPtr poseHandle = m_ndkSession.PoseAdapter.Create(pose);
             IntPtr anchorHandle = IntPtr.Zero;
-            ARDebug.LogInfo("native acquire anchor begin with pose:{0}",pose.ToString());
+            ARDebug.LogInfo("native acquire anchor begin with pose:{0}", pose.ToString());
             NDKARStatus status = NDKAPI.HwArSession_acquireNewAnchor(m_ndkSession.SessionHandle,
-                poseHandle,ref anchorHandle);
+                poseHandle, ref anchorHandle);
             ARDebug.LogInfo("native acquire anchor end with status={0}", status);
             m_ndkSession.PoseAdapter.Destroy(poseHandle);
             ARExceptionAdapter.ExtractException(status);
@@ -152,10 +157,10 @@ namespace HuaweiARInternal
             NDKAPI.HwArSession_getAllAnchors(m_ndkSession.SessionHandle, anchorListHandle);
 
             int cntOfAnchor = m_ndkSession.AnchorAdapter.GetListSize(anchorListHandle);
-            for(int i = 0; i < cntOfAnchor; i++)
+            for (int i = 0; i < cntOfAnchor; i++)
             {
                 IntPtr anchorHandle = m_ndkSession.AnchorAdapter.AcquireListItem(anchorListHandle, i);
-                anchorList.Add( m_ndkSession.AnchorManager.ARAnchorFactory(anchorHandle, false));
+                anchorList.Add(m_ndkSession.AnchorManager.ARAnchorFactory(anchorHandle, false));
             }
             m_ndkSession.AnchorAdapter.DestroyList(anchorListHandle);
         }
@@ -165,22 +170,22 @@ namespace HuaweiARInternal
         {
             trackableList.Clear();
             IntPtr trackableListHandle = m_ndkSession.TrackableAdapter.CreateList();
-            NDKAPI.HwArSession_getAllTrackables(m_ndkSession.SessionHandle, 
+            NDKAPI.HwArSession_getAllTrackables(m_ndkSession.SessionHandle,
                 NDKARTrackableType.BaseTrackable, trackableListHandle);
 
             int cntOfTrackable = m_ndkSession.TrackableAdapter.GetListSize(trackableListHandle);
-            for(int i = 0; i < cntOfTrackable; i++)
+            for (int i = 0; i < cntOfTrackable; i++)
             {
                 IntPtr trackableHandle = m_ndkSession.TrackableAdapter.AcquireListItem(trackableListHandle, i);
 
-                trackableList.Add(m_ndkSession.TrackableManager.ARTrackableFactory(trackableHandle,true));
+                trackableList.Add(m_ndkSession.TrackableManager.ARTrackableFactory(trackableHandle, true));
             }
             m_ndkSession.TrackableAdapter.DestroyList(trackableListHandle);
         }
 
         public long GetSaveLimit()
         {
-            long ret=0;
+            long ret = 0;
             NDKARStatus status = NDKAPI.HwArSession_getSaveLimit(m_ndkSession.SessionHandle, ref ret);
             ARExceptionAdapter.ExtractException(status);
             return ret;
@@ -191,11 +196,11 @@ namespace HuaweiARInternal
             long dataSize = GetSaveLimit();
             long usedSize = 0;
             ARSharedData.ARRawData rawdata = new ARSharedData.ARRawData(dataSize);
-            NDKARStatus status= NDKAPI.HwArSession_save(m_ndkSession.SessionHandle, rawdata.m_pinAddr, dataSize,
+            NDKARStatus status = NDKAPI.HwArSession_save(m_ndkSession.SessionHandle, rawdata.m_pinAddr, dataSize,
                 ref usedSize);
             ARExceptionAdapter.ExtractException(status);
 
-            rawdata.DataSize = usedSize > 0? usedSize : 0;
+            rawdata.DataSize = usedSize > 0 ? usedSize : 0;
             return new ARSharedData(rawdata);
         }
         public void LoadSharedData(ARSharedData sharedData)
@@ -218,26 +223,26 @@ namespace HuaweiARInternal
             long dataSize = GetSerializeAnchorsLimit();
             long usedSize = 0;
             IntPtr anchorListHandle = m_ndkSession.AnchorAdapter.CreateList();
-            foreach(ARAnchor anchor in anchorList)
+            foreach (ARAnchor anchor in anchorList)
             {
                 m_ndkSession.AnchorAdapter.AddListItem(anchorListHandle, anchor.m_anchorHandle);
             }
             ARSharedData.ARRawData rawData = new ARSharedData.ARRawData(dataSize);
             NDKARStatus status = NDKAPI.HwArSession_serializeAnchors(m_ndkSession.SessionHandle,
-                anchorListHandle, isNeedAlign,rawData.m_pinAddr,dataSize,ref usedSize);
+                anchorListHandle, isNeedAlign, rawData.m_pinAddr, dataSize, ref usedSize);
             ARExceptionAdapter.ExtractException(status);
             rawData.DataSize = usedSize;
             return new ARSharedData(rawData);
         }
 
-        public void DeSerializeAnchors(ARSharedData sharedData,List<ARAnchor> anchors)
+        public void DeSerializeAnchors(ARSharedData sharedData, List<ARAnchor> anchors)
         {
             IntPtr anchorListHandle = m_ndkSession.AnchorAdapter.CreateList();
             NDKARStatus status = NDKAPI.HwArSession_deserializeAnchors(m_ndkSession.SessionHandle,
                 sharedData.RawData.m_pinAddr, sharedData.RawData.DataSize, anchorListHandle);
             ARExceptionAdapter.ExtractException(status);
             int anchorListSize = m_ndkSession.AnchorAdapter.GetListSize(anchorListHandle);
-            for(int i = 0; i < anchorListSize; i++)
+            for (int i = 0; i < anchorListSize; i++)
             {
                 IntPtr anchorHandle = m_ndkSession.AnchorAdapter.AcquireListItem(anchorListHandle, i);
                 ARAnchor anchor = m_ndkSession.AnchorManager.ARAnchorFactory(anchorHandle, true);
@@ -261,17 +266,46 @@ namespace HuaweiARInternal
             return mode;
         }
 
+        
+        public void SetNotifyDataCallback(MonitorServiceCallback callback)
+        {
+            if (m_CallbackHandle == null)
+            {
+
+                m_CallbackHandle = GCHandle.Alloc(callback);
+                Debug.Log("zxh SetNotifyDataCallback 0"+GCHandle.ToIntPtr(m_CallbackHandle).ToInt32());
+                IntPtr ptr = Marshal.GetFunctionPointerForDelegate(callback);
+                Debug.Log("zxh SetNotifyDataCallback 1 "+ptr.ToInt32());
+                NDKARStatus status = NDKAPI.HwArSession_setNotifyDataCallback(m_ndkSession.SessionHandle,ptr);
+                ARExceptionAdapter.ExtractException(status);
+            }
+            else
+            {
+                MonitorServiceCallback monitorServiceCallback = m_CallbackHandle.Target as MonitorServiceCallback;
+                monitorServiceCallback += callback;
+                Debug.Log("zxh SetNotifyDataCallback 1 "+GCHandle.ToIntPtr(m_CallbackHandle).ToInt32());
+            }
+
+        }
+
+        public void SetCloudServiceAuthInfo(string authInfo)
+        {
+            NDKARStatus status = NDKAPI.HwArSession_setCloudServiceAuthInfo(m_ndkSession.SessionHandle, authInfo);
+            ARExceptionAdapter.ExtractException(status);
+        }
+      
+
         private struct NDKAPI
         {
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
-            public static extern NDKARStatus HwArSession_create(IntPtr envHandle,IntPtr applicationContextHandle,
+            public static extern NDKARStatus HwArSession_create(IntPtr envHandle, IntPtr applicationContextHandle,
                                     ref IntPtr sessionHandle);
 
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
             public static extern void HwArSession_destroy(IntPtr sessionHandle);
 
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
-            public static extern NDKARStatus HwArSession_checkSupported(IntPtr sessionHandle,IntPtr configHandle);
+            public static extern NDKARStatus HwArSession_checkSupported(IntPtr sessionHandle, IntPtr configHandle);
 
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
             public static extern NDKARStatus HwArSession_configure(IntPtr sessionHandle, IntPtr configHandle);
@@ -293,18 +327,18 @@ namespace HuaweiARInternal
             public static extern void HwArSession_setCameraTextureName(IntPtr sessionHandle, int textureId);
 
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
-            public static extern void HwArSession_setDisplayGeometry(IntPtr sessionHandle,int rotation,
-                int width,int height);
+            public static extern void HwArSession_setDisplayGeometry(IntPtr sessionHandle, int rotation,
+                int width, int height);
 
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
-            public static extern NDKARStatus HwArSession_acquireNewAnchor(IntPtr sessionHandle,IntPtr poseHandle,
+            public static extern NDKARStatus HwArSession_acquireNewAnchor(IntPtr sessionHandle, IntPtr poseHandle,
                 ref IntPtr outAnchorHandle);
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
-            public static extern void HwArSession_getAllAnchors(IntPtr sessionHandle,IntPtr outAnchorListHandle);
+            public static extern void HwArSession_getAllAnchors(IntPtr sessionHandle, IntPtr outAnchorListHandle);
 
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
             public static extern void HwArSession_getAllTrackables(IntPtr sessionHandle,
-                                  NDKARTrackableType filterType,IntPtr outTrackableListHandle);
+                                  NDKARTrackableType filterType, IntPtr outTrackableListHandle);
 
 
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
@@ -324,7 +358,7 @@ namespace HuaweiARInternal
                 bool isNeedAlign, IntPtr buffer, long bufLength, ref long outSize);
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
             public static extern NDKARStatus HwArSession_deserializeAnchors(IntPtr sessionHandle, IntPtr buffer,
-                long bufLength,IntPtr outAnchorList);
+                long bufLength, IntPtr outAnchorList);
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
             public static extern NDKARStatus HwArSession_getSerializeAnchorsLimit(IntPtr sessionHandle,
                 ref long outSize);
@@ -345,6 +379,12 @@ namespace HuaweiARInternal
 
             [DllImport(AdapterConstants.UnityPluginApi)]
             public static extern void HwArSession_getSupportedSemanticMode(IntPtr sessionHandle, ref int mode);
+            [DllImport(AdapterConstants.UnityPluginApi)]
+            public static extern NDKARStatus HwArSession_setNotifyDataCallback(IntPtr sessionHandle,
+                                                        IntPtr notify);
+            [DllImport(AdapterConstants.UnityPluginApi)]
+            public static extern NDKARStatus HwArSession_setCloudServiceAuthInfo(IntPtr sessionHandle, 
+            string authInfo);
         }
 
     }

@@ -69,6 +69,20 @@ namespace HuaweiARInternal
             ARDebug.LogInfo("AcquireName:{0}", ImgName);
             return ImgName;
         }
+        public string GetCloudImageId(IntPtr AugImgHandle){
+            string cloudImageId=string.Empty;
+            NDKAPI.HwArAugmentedImage_getCloudImageId(m_ndkSession.SessionHandle,AugImgHandle,ref cloudImageId);
+            return cloudImageId;
+        }
+
+          public string GetCloudImageMetadata(IntPtr AugImgHandle){
+            string metadata=string.Empty;
+            NDKAPI.HwArAugmentedImage_getCloudImageMetadata(m_ndkSession.SessionHandle,AugImgHandle,ref metadata);
+            return metadata;
+        }
+
+
+
 
         private struct NDKAPI
         {
@@ -82,6 +96,10 @@ namespace HuaweiARInternal
             public static extern void HwArAugmentedImage_getIndex(IntPtr sessionHandle, IntPtr augImgHandle, ref int outDatabaseIndex);
             [DllImport(AdapterConstants.HuaweiARNativeApi)]
             public static extern void HwArAugmentedImage_acquireName(IntPtr sessionHandle, IntPtr augImgHandle, ref string outName);
+            [DllImport(AdapterConstants.HuaweiARNativeApi)]
+            public static extern void HwArAugmentedImage_getCloudImageId(IntPtr sessionHandle, IntPtr augImgHandle, ref string outCloudImageId);
+            [DllImport(AdapterConstants.HuaweiARNativeApi)]
+            public static extern void HwArAugmentedImage_getCloudImageMetadata(IntPtr sessionHandle, IntPtr augImgHandle, ref string outCloudImageMetadata);
         }
     }
 }

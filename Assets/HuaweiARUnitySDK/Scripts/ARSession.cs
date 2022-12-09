@@ -4,6 +4,7 @@
     using HuaweiARInternal;
     using UnityEngine;
     using System.Collections.Generic;
+    using System.Runtime.InteropServices;
 
     /**
      * \if english
@@ -389,5 +390,32 @@
         {
             return ARSessionManager.Instance.m_ndkSession.SessionAdapter.GetSupportedSemanticMode();
         }
+
+        public static void AddServiceListener(MonitorServiceCallback callback)
+        {
+            if (callback == null)
+            {
+                throw new ArgumentNullException();
+            }
+            else
+            {
+                ARSessionManager.Instance.m_ndkSession.SessionAdapter.SetNotifyDataCallback(callback);
+            }
+        }
+
+        public static void SetCloudServiceAuthInfo(AuthInfo authInfo)
+        {
+            if (authInfo == null)
+            {
+                throw new ArgumentNullException();
+            }
+            else
+            {
+                string info = JsonUtility.ToJson(authInfo);
+                ARSessionManager.Instance.m_ndkSession.SessionAdapter.SetCloudServiceAuthInfo(info);
+            }
+        }
     }
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void MonitorServiceCallback(int eventID, int descSize, IntPtr desc);
 }
