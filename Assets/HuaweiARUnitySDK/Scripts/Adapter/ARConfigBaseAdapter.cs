@@ -66,7 +66,7 @@
 
             ARDebug.LogInfo("UpdateUnityConfigWithNDKConfig GetARType size {0}", arconfig.GetARType());
             NDKAPI.HwArConfig_getLightingMode(m_ndkSession.SessionHandle,configHandle,ref ret);
-            arconfig.SetLightingMode((ARConfigLightingMode)ret);
+            arconfig.SetLightingMode(ret);
 
             NDKAPI.HwArConfig_getPlaneFindingMode(m_ndkSession.SessionHandle,configHandle,ref ret);
             arconfig.SetPlaneFindingMode((ARConfigPlaneFindingMode)ret);
