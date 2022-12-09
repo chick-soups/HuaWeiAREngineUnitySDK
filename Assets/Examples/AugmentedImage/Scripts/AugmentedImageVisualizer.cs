@@ -73,24 +73,18 @@ namespace HuaweiARUnitySDK.Examples.AugmentedImage
 
             float halfWidth = Image.GetExtentX() / 2;
             float halfHeight = Image.GetExtentZ() / 2;
-            if (AREnginesSelector.Instance.GetCreatedEngine() == AREnginesType.HUAWEI_AR_ENGINE)
-            {
-                //arengine GetExtentX&GetExtentZ() isn't changing when camera moving,so using Image.GetCenterPose to move FrameLowerLeft etc.
-                Quaternion poseRotation = Image.GetCenterPose().rotation;
-                FrameLowerLeft.transform.position = poseRotation * ((halfWidth * Vector3.left) + (halfHeight * Vector3.back)) + Image.GetCenterPose().position;
-                FrameLowerLeft.transform.rotation = poseRotation;
-                FrameLowerRight.transform.position = poseRotation * ((halfWidth * Vector3.right) + (halfHeight * Vector3.back)) + Image.GetCenterPose().position;
-                FrameLowerRight.transform.rotation = poseRotation;
-                FrameUpperLeft.transform.position = poseRotation * ((halfWidth * Vector3.left) + (halfHeight * Vector3.forward)) + Image.GetCenterPose().position;
-                FrameUpperLeft.transform.rotation = poseRotation; 
-                FrameUpperRight.transform.position = poseRotation * ((halfWidth * Vector3.right) + (halfHeight * Vector3.forward)) + Image.GetCenterPose().position;
-                FrameUpperRight.transform.rotation = poseRotation;
-            }
-            else
-            {
-                ARDebug.LogWarning("Wrong AREngine Type" + AREnginesSelector.Instance.GetCreatedEngine());
-                return;
-            }
+
+            //arengine GetExtentX&GetExtentZ() isn't changing when camera moving,so using Image.GetCenterPose to move FrameLowerLeft etc.
+            Quaternion poseRotation = Image.GetCenterPose().rotation;
+            FrameLowerLeft.transform.position = poseRotation * ((halfWidth * Vector3.left) + (halfHeight * Vector3.back)) + Image.GetCenterPose().position;
+            FrameLowerLeft.transform.rotation = poseRotation;
+            FrameLowerRight.transform.position = poseRotation * ((halfWidth * Vector3.right) + (halfHeight * Vector3.back)) + Image.GetCenterPose().position;
+            FrameLowerRight.transform.rotation = poseRotation;
+            FrameUpperLeft.transform.position = poseRotation * ((halfWidth * Vector3.left) + (halfHeight * Vector3.forward)) + Image.GetCenterPose().position;
+            FrameUpperLeft.transform.rotation = poseRotation;
+            FrameUpperRight.transform.position = poseRotation * ((halfWidth * Vector3.right) + (halfHeight * Vector3.forward)) + Image.GetCenterPose().position;
+            FrameUpperRight.transform.rotation = poseRotation;
+
             ARDebug.LogInfo("image position {0} rotation {1} width {2} height {3}", Image.GetCenterPose().position, 
                 Image.GetCenterPose().rotation, halfWidth, halfHeight);
 

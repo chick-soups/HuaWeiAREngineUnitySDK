@@ -34,14 +34,12 @@
             NDKAPI.HwArConfig_setUpdateMode(m_ndkSession.SessionHandle, configHandle, (int)arConfig.GetUpdateMode());
             NDKAPI.HwArConfig_setImageInputMode(m_ndkSession.SessionHandle, configHandle, (int)arConfig.GetImageInputMode());
 
-            //this interface only support by HUAWEI_AR_ENGINE
-            if (AREnginesSelector.Instance.GetCreatedEngine() == AREnginesType.HUAWEI_AR_ENGINE)
-            {
-                NDKAPI.HwArConfig_setPowerMode(m_ndkSession.SessionHandle, configHandle, (int)arConfig.GetPowerMode());
-                NDKAPI.HwArConfig_setFocusMode(m_ndkSession.SessionHandle, configHandle, (int)arConfig.GetFocusMode());
-                NDKAPI.HwArConfig_setEnableItem(m_ndkSession.SessionHandle, configHandle, arConfig.GetConfigEnableItem());
-                NDKAPI.HwArConfig_setSemanticMode(m_ndkSession.SessionHandle, configHandle, arConfig.GetConfigSemanticMode());
-            }
+ 
+            NDKAPI.HwArConfig_setPowerMode(m_ndkSession.SessionHandle, configHandle, (int)arConfig.GetPowerMode());
+            NDKAPI.HwArConfig_setFocusMode(m_ndkSession.SessionHandle, configHandle, (int)arConfig.GetFocusMode());
+            NDKAPI.HwArConfig_setEnableItem(m_ndkSession.SessionHandle, configHandle, arConfig.GetConfigEnableItem());
+            NDKAPI.HwArConfig_setSemanticMode(m_ndkSession.SessionHandle, configHandle, arConfig.GetConfigSemanticMode());
+            
 
             //the following code is used to forward compatable
             if ((arConfig.GetARType() & (int)NDKARType.HAND_AR) != 0)
@@ -78,34 +76,33 @@
             arconfig.SetImageInputMode(ret);
 
             //this interface only support by HUAWEI_AR_ENGINE
-            if (AREnginesSelector.Instance.GetCreatedEngine() == AREnginesType.HUAWEI_AR_ENGINE)
+
+            NDKAPI.HwArConfig_getHandFindingMode(m_ndkSession.SessionHandle, configHandle, ref ret);
+            arconfig.SetHandFindingMode((ARConfigHandFindingMode)ret);
+
+            NDKAPI.HwArConfig_getPowerMode(m_ndkSession.SessionHandle, configHandle, ref ret);
+            arconfig.SetPowerMode((ARConfigPowerMode)ret);
+
+            NDKAPI.HwArConfig_getFocusMode(m_ndkSession.SessionHandle, configHandle, ref ret);
+            arconfig.SetFocusMode((ARConfigFocusMode)ret);
+
+            ulong enableItem = 0;
+            NDKAPI.HwArConfig_getEnableItem(m_ndkSession.SessionHandle, configHandle, ref enableItem);
+            ARConfigEnableItem arconfigEnableItem = (ARConfigEnableItem)enableItem;
+
+            if (arconfig.EnableItem.HasFlag(ARConfigEnableItem.ENABLE_MESH))
             {
-                NDKAPI.HwArConfig_getHandFindingMode(m_ndkSession.SessionHandle, configHandle, ref ret);
-                arconfig.SetHandFindingMode((ARConfigHandFindingMode)ret);
-
-                NDKAPI.HwArConfig_getPowerMode(m_ndkSession.SessionHandle, configHandle, ref ret);
-                arconfig.SetPowerMode((ARConfigPowerMode)ret);
-
-                NDKAPI.HwArConfig_getFocusMode(m_ndkSession.SessionHandle, configHandle, ref ret);
-                arconfig.SetFocusMode((ARConfigFocusMode)ret);
-
-                ulong enableItem = 0;
-                NDKAPI.HwArConfig_getEnableItem(m_ndkSession.SessionHandle, configHandle, ref enableItem);
-                ARConfigEnableItem arconfigEnableItem=(ARConfigEnableItem)enableItem;
-              
-                if (arconfig.EnableItem.HasFlag(ARConfigEnableItem.ENABLE_MESH))
+                if (!arconfigEnableItem.HasFlag(ARConfigEnableItem.ENABLE_MESH))
                 {
-                    if (!arconfigEnableItem.HasFlag(ARConfigEnableItem.ENABLE_MESH))
-                    {
-                        throw new ARUnSupportedConfigurationException();
-                    }
+                    throw new ARUnSupportedConfigurationException();
                 }
-                arconfig.EnableItem =  arconfigEnableItem;
-
-                int enableSemanticMode = 0;
-                NDKAPI.HwArConfig_getSemanticMode(m_ndkSession.SessionHandle, configHandle, ref enableSemanticMode);
-                arconfig.SemanticMode=(ARConfigSemanticMode)enableSemanticMode;
             }
+            arconfig.EnableItem = arconfigEnableItem;
+
+            int enableSemanticMode = 0;
+            NDKAPI.HwArConfig_getSemanticMode(m_ndkSession.SessionHandle, configHandle, ref enableSemanticMode);
+            arconfig.SemanticMode = (ARConfigSemanticMode)enableSemanticMode;
+            
         }
 
         private struct NDKAPI

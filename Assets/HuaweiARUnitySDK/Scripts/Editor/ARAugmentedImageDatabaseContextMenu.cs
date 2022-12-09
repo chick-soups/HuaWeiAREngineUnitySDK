@@ -63,7 +63,6 @@ namespace HuaweiARInternal
             if (selectedImagePaths.Count > 0)
             {
                 var newDatabase = ScriptableObject.CreateInstance<ARAugmentedImageDatabase>();
-                newDatabase.SetARAugImageDatabaseType(AREnginesType.HUAWEI_AR_ENGINE);
                 var newEntries = new List<ARAugmentedImageDatabaseEntry>();
                 foreach (var imagePath in selectedImagePaths)
                 {

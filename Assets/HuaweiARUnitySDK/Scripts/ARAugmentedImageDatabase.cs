@@ -42,8 +42,6 @@ namespace HuaweiARUnitySDK
         private bool m_IsRawDataDirty = true;
         [SerializeField]
         private string m_CliVersion = string.Empty;
-        [SerializeField]
-        private static AREnginesType m_ARAugImageDatabaseType = AREnginesType.HUAWEI_AR_ENGINE;
 
         public int Count
         {
@@ -134,15 +132,8 @@ namespace HuaweiARUnitySDK
                 return;
             }
 
-            if (m_ARAugImageDatabaseType == AREnginesType.HUAWEI_AR_ENGINE)
-            {
-                BuildHWDatabase(cliBinaryPath, out error);
-            }
-            else
-            {
-                ARDebug.LogWarning("Wrong AREngine Type" + m_ARAugImageDatabaseType);
-                return;
-            }
+            BuildHWDatabase(cliBinaryPath, out error);
+
 
             m_IsRawDataDirty = false;
             EditorUtility.SetDirty(this);
@@ -216,18 +207,7 @@ namespace HuaweiARUnitySDK
 
         public static bool FindCliBinaryPath(out string path)
         {
-            string binaryName;
-            if (m_ARAugImageDatabaseType == AREnginesType.HUAWEI_AR_ENGINE)
-            {
-                binaryName = UtilConstants.HWAugmentedImageCliBinaryName;
-            }
-            else
-            {
-                Debug.LogWarning("Wrong AREngine Type" + m_ARAugImageDatabaseType);
-                path = string.Empty;
-                return false;
-            }
-
+            string binaryName = UtilConstants.HWAugmentedImageCliBinaryName;
             string[] cliBinaryGuid = AssetDatabase.FindAssets(binaryName);
             if (cliBinaryGuid.Length == 0)
             {
@@ -246,16 +226,6 @@ namespace HuaweiARUnitySDK
         internal byte[] GetRawData()
         {
             return m_RawData;
-        }
-
-        public void SetARAugImageDatabaseType(AREnginesType databaseType)
-        {
-            m_ARAugImageDatabaseType = databaseType;
-        }
-
-        public AREnginesType GetARAugImageDatabaseType()
-        {
-            return m_ARAugImageDatabaseType;
         }
     }
 }
