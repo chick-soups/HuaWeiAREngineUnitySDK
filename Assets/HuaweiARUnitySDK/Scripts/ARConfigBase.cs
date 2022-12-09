@@ -71,7 +71,7 @@
         public ARConfigSemanticMode SemanticMode=ARConfigSemanticMode.NONE;
         public bool  SemanticPlaneMode{
             get{
-                return SemanticMode==ARConfigSemanticMode.PLANE;
+                return SemanticMode.HasFlag(ARConfigSemanticMode.PLANE);
             }
         }
 

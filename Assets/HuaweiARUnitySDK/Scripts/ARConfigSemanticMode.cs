@@ -1,6 +1,7 @@
+using System;
 namespace HuaweiARUnitySDK
 {
-
+   [Flags]
     public enum ARConfigSemanticMode
     {
         NONE = 0,
