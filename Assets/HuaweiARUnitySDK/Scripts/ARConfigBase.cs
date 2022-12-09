@@ -37,15 +37,43 @@
          */
         public ARConfigPowerMode PowerMode = ARConfigPowerMode.NORMAL;
 
-         public ARConfigEnableItem m_EnableItem=ARConfigEnableItem.ENABLE_DEPTH;
-
+        public ARConfigEnableItem EnableItem=ARConfigEnableItem.ENABLE_DEPTH;
+        [Obsolete("Use EnableItem instead.")]
+        public bool EnableDepth
+        {
+            get
+            {
+                return EnableItem.HasFlag(ARConfigEnableItem.ENABLE_DEPTH);
+            }
+        }
+        [Obsolete("Use EnableItem instead.")]
+        public bool EnableMask
+        {
+            get
+            {
+                return EnableItem.HasFlag(ARConfigEnableItem.ENABLE_MASK);
+            }
+        }
+        [Obsolete("Use EnableItem instead.")]
+        public bool EnableMesh
+        {
+            get
+            {
+                return EnableItem.HasFlag(ARConfigEnableItem.ENABLE_MESH);
+            }
+        }
         /**\if english
          * Enable semantic plane mode. Default value is \c false.
          * \else
          * 配置使能语义识别平面模式。默认关闭。
          * \endif
          */
-        public ARConfigSemanticMode m_SemanticMode=ARConfigSemanticMode.NONE;
+        public ARConfigSemanticMode SemanticMode=ARConfigSemanticMode.NONE;
+        public bool  SemanticPlaneMode{
+            get{
+                return SemanticMode==ARConfigSemanticMode.PLANE;
+            }
+        }
 
         /**\if english
          * The way the configuration item is opened by the camera. The camera is turned on internally by default.
@@ -85,7 +113,7 @@
         internal const int ENABLE_CLOUD_OBJECT_RECOGNITION = 1 << 10;
         internal virtual ulong GetConfigEnableItem()
         {
-            return (ulong)m_EnableItem;
+            return (ulong)EnableItem;
         }
 
         internal const int EnableSemanticModeNone = 0;
@@ -93,7 +121,7 @@
         internal const int SEMANTIC_TARGET=1<<1;
         internal virtual int GetConfigSemanticMode()
         {
-            return (int)m_SemanticMode;
+            return (int)SemanticMode;
         }
 
         internal const int LIGHT_MODE_NONE = 0;

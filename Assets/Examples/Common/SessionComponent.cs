@@ -39,21 +39,6 @@
         bool installRequested = false;
         void Init()
         {
-            //If you do not want to switch engines, AREnginesSelector is useless.
-            // You just need to use AREnginesApk.Instance.requestInstall() and the default engine
-            // is Huawei AR Engine.
-            AREnginesAvaliblity ability = AREnginesSelector.Instance.CheckDeviceExecuteAbility();
-            if ((AREnginesAvaliblity.HUAWEI_AR_ENGINE & ability) != 0)
-            {
-                AREnginesSelector.Instance.SetAREngine(AREnginesType.HUAWEI_AR_ENGINE);
-            }
-            else
-            {
-                errorMessage ="This device does not support AR Engine. Exit.";
-                Invoke("_DoQuit", 0.5f);
-                return;
-            }
-
             try
             {
                 switch (AREnginesApk.Instance.RequestInstall(!installRequested))

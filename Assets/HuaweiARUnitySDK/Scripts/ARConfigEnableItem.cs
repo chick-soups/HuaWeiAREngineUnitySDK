@@ -6,7 +6,7 @@ namespace HuaweiARUnitySDK
     {
         ENABLE_NULL = 0,
         ENABLE_DEPTH = 1 << 0,
-        ENABLE_MAEK = 1 << 1,
+        ENABLE_MASK = 1 << 1,
         ENABLE_MESH = 1 << 2,
         ENABLE_CLOUD_ANCHOR = 1 << 4,
         ENABLE_CLOUD_AUGMENTED_IMAGE = 1 << 5,

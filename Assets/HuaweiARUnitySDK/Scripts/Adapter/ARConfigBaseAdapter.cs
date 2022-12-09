@@ -91,22 +91,20 @@
 
                 ulong enableItem = 0;
                 NDKAPI.HwArConfig_getEnableItem(m_ndkSession.SessionHandle, configHandle, ref enableItem);
-
-                arconfig.EnableDepth = Convert.ToBoolean(enableItem & ARConfigBase.EnableItem_Depth);
-                arconfig.EnableMask = Convert.ToBoolean(enableItem & ARConfigBase.EnableItem_Mask);
-                bool enableItemMesh = Convert.ToBoolean(enableItem & ARConfigBase.EnableItem_Mesh);
-                if (arconfig.EnableMesh)
+                ARConfigEnableItem arconfigEnableItem=(ARConfigEnableItem)enableItem;
+              
+                if (arconfig.EnableItem.HasFlag(ARConfigEnableItem.ENABLE_MESH))
                 {
-                    if (!enableItemMesh)
+                    if (!arconfigEnableItem.HasFlag(ARConfigEnableItem.ENABLE_MESH))
                     {
                         throw new ARUnSupportedConfigurationException();
                     }
                 }
-                arconfig.EnableMesh = enableItemMesh;
+                arconfig.EnableItem =  arconfigEnableItem;
 
                 int enableSemanticMode = 0;
                 NDKAPI.HwArConfig_getSemanticMode(m_ndkSession.SessionHandle, configHandle, ref enableSemanticMode);
-                arconfig.SemanticPlaneMode = Convert.ToBoolean(enableItem & ARConfigBase.EnableSemanticPlaneMode);
+                arconfig.SemanticMode=(ARConfigSemanticMode)enableSemanticMode;
             }
         }
 

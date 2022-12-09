@@ -15,13 +15,8 @@ MonoBehaviour:
   LightingMode: 1
   UpdateMode: 0
   PowerMode: 0
-  m_EnableItem: 1
-  EnableDepth: 1
-  EnableMask: 0
-  EnableMesh: 0
-  m_SemanticMode: 1
-  SemanticPlaneMode: 1
-  SemanticTargetMode: 0
+  EnableItem: 1
+  SemanticMode: 1
   ImageInputMode: 0
   FocusMode: 0
   PlaneFindingMode: 3
