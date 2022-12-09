@@ -142,6 +142,7 @@
          * @bug 暂不可用。
          * \endif
          */
+         [Obsolete]
         public int[] GetGestureAction()
         {
             return m_ndkSession.HandAdapter.GetGestureAction(m_trackableHandle);
@@ -156,6 +157,7 @@
          * @bug 暂不可用。
          * \endif
          */
+         [Obsolete]
         public Vector4 GetGestureOrientation()
         {
             return m_ndkSession.HandAdapter.GetGestureOrientation(m_trackableHandle);
@@ -180,6 +182,7 @@
          * @brief 获取手骨骼点的个数。
          * \endif
          */
+         [Obsolete]
         public int GetHandSkeletonCount()
         {
             return m_ndkSession.HandAdapter.GetHandSkeletonCount(m_trackableHandle);
