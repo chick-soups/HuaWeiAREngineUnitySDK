@@ -1,0 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace HuaweiARUnitySDK
+{
+    public enum HealthParameterType
+    {
+       PARAMETER_INVILID = 0,
+       PARAMETER_HEART_RATE = 1,
+       PARAMETER_HEART_RATE_SNR = 2,
+       PARAMETER_HEART_RATE_CONFIDENCE = 3,
+       PARAMETER_BREATH_RATE = 4,
+       PARAMETER_BREATH_RATE_SNR = 5,
+       PARAMETER_BREATH_RATE_CONFIDENCE = 6,
+       PARAMETER_FACE_AGE = 7,
+       PARAMETER_GENDER_MALE_WEIGHT = 8,
+       PARAMETER_GENDER_FEMALE_WEIGHT = 9,
+        HEAR_PARAMETER_FACE_HEALTH_STATUS = 13,
+        HEAR_PARAMETER_FACE_HEALTH_PROC_PROGRESS = 14,
+        HEAR_PARAMETER_HEART_WAVE = 15,
+        HEAR_PARAMETER_SPO2_VALUE = 16,
+    }
+}
+
