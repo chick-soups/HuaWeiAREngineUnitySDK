@@ -26,7 +26,7 @@ namespace HuaweiARUnitySDK
             return m_Adapter.GetImageDimensions(m_CameraIntrinsicsHandle);
         }
 
-        public Vector2 GetTextureDimensions()
+        public Vector2 GetPrincipalPoint()
         {
             return m_Adapter.GetPrincipalPoint(m_CameraIntrinsicsHandle);
         }
