@@ -416,6 +416,4 @@
             }
         }
     }
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void MonitorServiceCallback(int eventID, int descSize, IntPtr desc);
 }

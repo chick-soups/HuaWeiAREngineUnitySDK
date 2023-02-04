@@ -266,31 +266,10 @@ namespace HuaweiARInternal
             return mode;
         }
 
-        
-        public void SetNotifyDataCallback(MonitorServiceCallback callback)
-        {
-            if (m_CallbackHandle == null)
-            {
-
-                m_CallbackHandle = GCHandle.Alloc(callback);
-                Debug.Log("zxh SetNotifyDataCallback 0"+GCHandle.ToIntPtr(m_CallbackHandle).ToInt32());
-                IntPtr ptr = Marshal.GetFunctionPointerForDelegate(callback);
-                Debug.Log("zxh SetNotifyDataCallback 1 "+ptr.ToInt32());
-                NDKARStatus status = NDKAPI.HwArSession_setNotifyDataCallback(m_ndkSession.SessionHandle,ptr);
-                ARExceptionAdapter.ExtractException(status);
-            }
-            else
-            {
-                MonitorServiceCallback monitorServiceCallback = m_CallbackHandle.Target as MonitorServiceCallback;
-                monitorServiceCallback += callback;
-                Debug.Log("zxh SetNotifyDataCallback 1 "+GCHandle.ToIntPtr(m_CallbackHandle).ToInt32());
-            }
-
-        }
-
         public void SetCloudServiceAuthInfo(string authInfo)
         {
             NDKARStatus status = NDKAPI.HwArSession_setCloudServiceAuthInfo(m_ndkSession.SessionHandle, authInfo);
+            Debug.Log("zxh SetCloudServiceAuthInfo "+status);
             ARExceptionAdapter.ExtractException(status);
         }
       
@@ -378,11 +357,8 @@ namespace HuaweiARInternal
             public static extern void WaitForRenderingThreadFinished();
 
             [DllImport(AdapterConstants.UnityPluginApi)]
-            public static extern void HwArSession_getSupportedSemanticMode(IntPtr sessionHandle, ref int mode);
-            [DllImport(AdapterConstants.UnityPluginApi)]
-            public static extern NDKARStatus HwArSession_setNotifyDataCallback(IntPtr sessionHandle,
-                                                        IntPtr notify);
-            [DllImport(AdapterConstants.UnityPluginApi)]
+            public static extern void HwArSession_getSupportedSemanticMode(IntPtr sessionHandle, ref int mode);                                           
+            [DllImport(AdapterConstants.HuaweiARNativeApi)]
             public static extern NDKARStatus HwArSession_setCloudServiceAuthInfo(IntPtr sessionHandle, 
             string authInfo);
         }

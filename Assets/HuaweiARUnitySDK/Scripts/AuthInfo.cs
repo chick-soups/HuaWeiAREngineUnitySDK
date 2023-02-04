@@ -5,6 +5,6 @@ namespace HuaweiARUnitySDK
     {
         public string appId;
         public string appSecret;
-        public string modelName;
+        public string galleryId;
     }
 }
