@@ -390,19 +390,6 @@
         {
             return ARSessionManager.Instance.m_ndkSession.SessionAdapter.GetSupportedSemanticMode();
         }
-
-        public static void AddServiceListener(MonitorServiceCallback callback)
-        {
-            if (callback == null)
-            {
-                throw new ArgumentNullException();
-            }
-            else
-            {
-                ARSessionManager.Instance.m_ndkSession.SessionAdapter.SetNotifyDataCallback(callback);
-            }
-        }
-
         public static void SetCloudServiceAuthInfo(AuthInfo authInfo)
         {
             if (authInfo == null)
