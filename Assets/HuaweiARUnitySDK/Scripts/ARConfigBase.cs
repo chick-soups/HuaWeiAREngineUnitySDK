@@ -82,6 +82,7 @@
          * \endif
          */
         public int ImageInputMode = 0;
+        public Vector2Int PreviewSize=new Vector2Int(1280,720);
 
         internal virtual ARAugmentedImageDatabase GetAugImgDataBaseHandle() { return null; }
         internal abstract int GetARType();
@@ -158,6 +159,12 @@
                 LightingMode = (ARConfigLightingMode)lightingMode;
             }
 
+        }
+        internal virtual Vector2Int GetPreviewSize(){
+            return PreviewSize;
+        }
+        internal virtual void SetPreviewSize(Vector2Int previewSize){
+            PreviewSize=previewSize;
         }
     }
 }

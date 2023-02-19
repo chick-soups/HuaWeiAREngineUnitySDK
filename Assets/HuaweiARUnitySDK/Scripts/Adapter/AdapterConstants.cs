@@ -10,6 +10,7 @@
         public const string UnityPluginApi = "huawei_arengine_unity_plugin";
         public const string NDKCameraApi = "camera2ndk";
         public const string NDKMediaApi = "mediandk";
+        public const string NDKAndroidHelper= "HuaWeiAREngineAndroidHelper";
         
 
         public static int Enum_TrackingState_MaxIntValue = Enum.GetValues(typeof(ARTrackable.TrackingState))
